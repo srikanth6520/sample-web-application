@@ -1,2 +1,3 @@
 #!/bin/bash
-docker build -f Dockerfile 
+IMAGE_NAME="test"
+docker build -t $IMAGE_NAME .

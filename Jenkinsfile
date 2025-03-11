@@ -42,22 +42,18 @@ pipeline {
           }
        }
        
-       stage ("Deploy to Kubernetes") {
-           steps {
-               script {
-                   def releaseName = "my-app"  // Helm release name
-                   def chartPath = "./my-app/helm"  // Path to Helm chart
-                   def namespace = "default"  // Kubernetes namespace
-            
-                   // Deploy using Helm
-                   sh """
-                   helm upgrade --install ${releaseName} ${chartPath} \
-                    --set image.repository=${DOCKER_IMAGE} \
-                    --set image.tag=${BUILD_NUMBER} \
-                    --namespace ${namespace}
-                   """
-               }
-           }
-       }
-   }
+       stage('Deploy to Tomcat') {
+            steps {
+                script {
+                    withCredentials([usernamePassword(credentialsId: 'your-azure-vm-credentials', usernameVariable: 'AZURE_USER', passwordVariable: 'AZURE_PASSWORD')]) {
+                        sh """
+                        ssh -o StrictHostKeyChecking=no $AZURE_USER@your-azure-vm-ip -p 22 'sudo rm -rf /var/lib/tomcat9/webapps/your-app.war'
+                        scp target/your-app.war $AZURE_USER@your-azure-vm-ip:/var/lib/tomcat9/webapps/
+                        ssh -o StrictHostKeyChecking=no $AZURE_USER@your-azure-vm-ip -p 22 'sudo systemctl restart tomcat9'
+                        """
+                    }
+                }
+            }
+        }
+    }
 }

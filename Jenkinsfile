@@ -3,7 +3,7 @@ pipeline {
 
    environment {
        DOCKER_HUB_USERNAME = env.DOCKER_HUB_USERNAME
-       IMAGE_NAME = "sample-web-application"
+       IMAGE_NAME = "${IMAGE_NAME}"
        DOCKER_IMAGE = "${DOCKER_HUB_USERNAME}/${IMAGE_NAME}"
    }
 

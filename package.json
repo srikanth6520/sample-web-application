@@ -1,0 +1,8 @@
+<pre><span style="background-color:#2AA1B3"><font color="#FFD7D7">{</font></span>
+  &quot;<font color="#E9AD0C">dependencies</font>&quot;: <font color="#FFD7D7">{</font>
+    &quot;<font color="#E9AD0C">body-parser</font>&quot;: &quot;<font color="#C061CB">^2.2.0</font>&quot;,
+    &quot;<font color="#E9AD0C">cors</font>&quot;: &quot;<font color="#C061CB">^2.8.5</font>&quot;,
+    &quot;<font color="#E9AD0C">express</font>&quot;: &quot;<font color="#C061CB">^5.1.0</font>&quot;
+  <font color="#FFD7D7">}</font>
+<span style="background-color:#2AA1B3"><font color="#FFD7D7">}</font></span>
+</pre>

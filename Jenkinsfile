@@ -27,6 +27,31 @@ pipeline {
             }
         }
 
+        stage ("Unit Testing") {
+            steps {
+                sh 'mvn test'  // Run unit tests using Maven
+            }
+        }
+
+        stage ("SonarQube Analysis") {
+            environment {
+                SONARQUBE_URL = 'http://sonarqube:9000'
+                SONARQUBE_CREDENTIALS = 'sonar-credentials-id'  // Use a Jenkins credential ID for SonarQube login
+            }
+            steps {
+                script {
+                    // Run SonarQube analysis on the code
+                    sh """
+                        mvn sonar:sonar \
+                        -Dsonar.projectKey=${GIT_REPO} \
+                        -Dsonar.host.url=${SONARQUBE_URL} \
+                        -Dsonar.login=${SONARQUBE_CREDENTIALS} \
+                        -Dsonar.branch.name=${GIT_BRANCH}
+                    """
+                }
+            }
+        }
+
         stage ("Package the Artifacts") {
             steps {
                 sh 'chmod +x ./build.sh'

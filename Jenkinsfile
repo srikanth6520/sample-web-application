@@ -66,6 +66,26 @@ pipeline {
             }
         }
 
+        stage ("Scan Docker Image with Trivy") {
+            steps {
+                script {
+                    // Extract values from the fetched environment string
+                    def envVars = DOCKER_ENV.tokenize(" ")
+                    def dockerHubUser = envVars.find { it.startsWith("DOCKER_HUB_USERNAME=") }?.split("=")[1]
+                    def imageName = envVars.find { it.startsWith("IMAGE_NAME=") }?.split("=")[1]
+                    def dockerImage = "${dockerHubUser}/${imageName}"
+
+                    // Pull the image first (optional if not built locally)
+                    sh "docker pull ${dockerImage}:${BUILD_NUMBER}"
+
+                    // Run Trivy scan
+                    sh """
+                        trivy image --exit-code 1 --severity HIGH,CRITICAL ${dockerImage}:${BUILD_NUMBER}
+                    """
+                }
+            }
+        }
+
         stage ("Push Artifacts to Docker Hub") {
             steps {
                 script {
